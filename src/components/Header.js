@@ -203,7 +203,7 @@ const MobileNavbar = ({ sections, activeNav, showEntry }) => {
         onClick={() => setVisible(!visible)}
         style={{ placeSelf: 'center flex-end' }}
       >
-        Menu
+        {visible ? '收起' : '展开'}
       </Button>
     </Popover>
   );
