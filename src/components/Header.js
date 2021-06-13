@@ -81,7 +81,7 @@ const Header = ({ style = {}, sections = [] }) => {
             }}
           />
 
-          <Text style={{ color: '#fff' }}>ELonWu</Text>
+          <Text style={{ color: '#fff' }}>TX</Text>
         </div>
 
         {isMobile ? (
