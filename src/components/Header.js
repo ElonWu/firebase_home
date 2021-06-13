@@ -66,6 +66,7 @@ const Header = ({ style = {}, sections = [] }) => {
           style={{
             display: 'grid',
             gap: 8,
+            placeSelf: 'center flex-start',
             placeItems: 'center flex-start',
             gridAutoFlow: 'column',
           }}
@@ -81,7 +82,7 @@ const Header = ({ style = {}, sections = [] }) => {
             }}
           />
 
-          <Text style={{ color: '#fff' }}>TX</Text>
+          <Text style={{ color: '#fff' }}>ELonWu</Text>
         </div>
 
         {isMobile ? (
