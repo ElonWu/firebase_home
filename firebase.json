@@ -2,6 +2,12 @@
   "hosting": {
     "public": "dist",
     "site": "cv-elonwu",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "cache"]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "cache"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
