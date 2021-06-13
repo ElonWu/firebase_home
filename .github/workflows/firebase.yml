@@ -9,13 +9,13 @@ jobs:
     name: 打包
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: 拉取
         uses: actions/checkout@master
-      - name: Install Dependencies
+      - name: 安装依赖
         run: npm install
-      - name: Build
+      - name: 执行打包
         run: npm run build
-      - name: Archive Production Artifact
+      - name: 记录
         uses: actions/upload-artifact@master
         with:
           name: dist
@@ -25,16 +25,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: 拉取
         uses: actions/checkout@master
       - name: Download Artifact
         uses: actions/download-artifact@master
         with:
           name: dist
           path: dist
-      - name: Deploy to Firebase
+      - name: Firebase 部署
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
         env:
-          FIREBASE_TOKEN: ${{ secrets.TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.firebase.TOKEN }}
