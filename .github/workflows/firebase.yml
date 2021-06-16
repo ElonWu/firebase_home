@@ -24,8 +24,9 @@ jobs:
       - name: 安装依赖
         run: npm install
 
-  # build:
+  # test:
   #   name: 测试
+  #   needs: install
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: 执行测试
@@ -33,12 +34,13 @@ jobs:
 
   build:
     name: 构建
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - name: 执行构建
         run: npm run build
 
-  # deploy:
+  # log:
   #   name: 构建文件记录
   #   needs: build
   #   runs-on: ubuntu-latest
@@ -70,9 +72,10 @@ jobs:
 
   notice:
     name: 通知
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 钉钉通知正式打包结果
+      - name: 钉钉推送
         if: github.ref == 'refs/heads/master'
         uses: ghostoy/dingtalk-action@master
         with:
