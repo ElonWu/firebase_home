@@ -17,6 +17,8 @@ import Text from './Text';
  */
 import logo from '@/assets/logo.png';
 
+import { isDeveloping, isTesting, isReleasing } from '@/api/base';
+
 const Header = ({ style = {}, sections = [] }) => {
   const [activeNav, setActiveNav] = useState(sections[0]);
   const showEntry = (key) => {
@@ -82,7 +84,9 @@ const Header = ({ style = {}, sections = [] }) => {
             }}
           />
 
-          <Text style={{ color: '#fff' }}>ELonWu</Text>
+          <Text style={{ color: '#fff' }}>
+            {isDeveloping ? '开发中' : isTesting ? '测试版' : 'ELonWu'}
+          </Text>
         </div>
 
         {isMobile ? (
