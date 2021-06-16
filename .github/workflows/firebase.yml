@@ -3,15 +3,16 @@ on:
   push:
     branches:
       - master
+      - test
 
 jobs:
   build:
-    name: 测试+构建
+    name: 测试,构建
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: 搭建 Node 环境
+      - name: 搭建 node 环境
         uses: actions/setup-node@v2
         with:
           node-version: '14'
@@ -44,13 +45,36 @@ jobs:
               "text": "测试失败",
               "btnOrientation": "0",
               "btns": [{
-                "title": "查看项目",
+                "title": "查看 action",
                 "actionURL": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
               }]
             }
 
-      - name: 构建
+      - name: 正式服构建
+        if: github.ref == 'refs/heads/master'
         run: npm run build
+
+      - name: 测试服构建
+        if: github.ref == 'refs/heads/test'
+        run: npm run build:test
+
+      - name: 打包失败推送
+        if: ${{ failure() }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          secret: ${{ secrets.DINGTALK_SECRET }}
+          msgtype: 'actionCard'
+          content: |
+            {
+              "title": "打包失败",
+              "text": "打包失败",
+              "btnOrientation": "0",
+              "btns": [{
+                "title": "查看 action",
+                "actionURL": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }]
+            }
 
       - name: 上传打包文件
         uses: actions/upload-artifact@master
@@ -70,10 +94,20 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Firebase 部署
+
+      - name: Firebase 部署正式服
+        if: github.ref == 'refs/heads/master'
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting
+          args: deploy --only hosting:master
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Firebase 部署测试服
+        if: github.ref == 'refs/heads/test'
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting:test
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
@@ -82,7 +116,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 发布成功的推送
+      - name: 正式服部署的推送
         if: github.ref == 'refs/heads/master'
         uses: ghostoy/dingtalk-action@master
         with:
@@ -91,11 +125,29 @@ jobs:
           msgtype: 'actionCard'
           content: |
             {
-              "title": "部署成功", 
-              "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 更新正式服 ",
+              "title": "正式服部署成功", 
+              "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 成功部署了正式服",
               "btnOrientation": "0", 
               "btns": [{
-                "title": "查看项目", 
-                "actionURL": "https://elonwu.site"
+                "title": "查看正式服", 
+                "actionURL": "https://sidework.elonwu.site"
+              }]
+            }
+
+      - name: 测试服部署的推送
+        if: github.ref == 'refs/heads/test'
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          secret: ${{ secrets.DINGTALK_SECRET }}
+          msgtype: 'actionCard'
+          content: |
+            {
+              "title": "测试服成功部署", 
+              "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 成功部署了测试服",
+              "btnOrientation": "0", 
+              "btns": [{
+                "title": "查看测试服", 
+                "actionURL": "https://test-sidework.test.elonwu.site"
               }]
             }

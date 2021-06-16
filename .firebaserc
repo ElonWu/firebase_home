@@ -1,5 +1,17 @@
 {
   "projects": {
-    "default": "elonwu"
+    "default": "elonwu-sidework"
+  },
+  "targets": {
+    "elonwu": {
+      "hosting": {
+        "master": [
+          "elonwu-sidework"
+        ],
+        "test": [
+          "test-elonwu-sidework"
+        ]
+      }
+    }
   }
 }
