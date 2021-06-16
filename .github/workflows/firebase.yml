@@ -1,40 +1,100 @@
-name: 部署 Firebase
+name: 自动化
 on:
   push:
     branches:
       - master
 
 jobs:
-  build:
-    name: 打包
+  install: 
+    name: 安装
     runs-on: ubuntu-latest
-    steps:
-      - name: 拉取
-        uses: actions/checkout@master
+    steps: 
+      - uses: actions/checkout@v2
+      - name: 搭建 Node 环境
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: 缓存安装文件
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: 安装依赖
         run: npm install
-      - name: 执行打包
+
+  # build:
+  #   name: 测试
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 执行测试
+  #       run: npm run test
+
+  build:
+    name: 构建
+    runs-on: ubuntu-latest
+    steps:
+      - name: 执行构建
         run: npm run build
-      - name: 记录
-        uses: actions/upload-artifact@master
-        with:
-          name: dist
-          path: dist
+
+  # deploy:
+  #   name: 构建文件记录
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 上传打包文件
+  #       uses: actions/upload-artifact@master
+  #       with:
+  #         name: dist
+  #         path: dist
+  #     - name: 拉取仓库
+  #       uses: actions/checkout@master
+  #     - name: 下载打包文件
+  #       uses: actions/download-artifact@master
+  #       with:
+  #         name: dist
+  #         path: dist
+
   deploy:
     name: 部署
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取
-        uses: actions/checkout@master
-      - name: Download Artifact
-        uses: actions/download-artifact@master
-        with:
-          name: dist
-          path: dist
       - name: Firebase 部署
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+  deploy:
+    name: 通知
+    runs-on: ubuntu-latest
+    steps:       
+      - name: 钉钉通知正式打包结果
+        if: github.ref == 'refs/heads/master'
+        uses: ghostoy/dingtalk-action@master
+        with:
+          # dingtalk webhook
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          # secret used for signing
+          secret: ${{ secrets.DINGTALK_SECRET }}
+          # dingtalk message type
+          msgtype: 'actionCard'
+          # content for dingtalk message in JSON format
+          content: |
+            {
+              "title": "部署成功", 
+              "text": "部署成功"
+              "btnOrientation": "0", 
+              "btns": [{
+                "title": "查看项目", 
+                "actionURL": "https://google.cn"
+              }]
+            }
+
+
+
+# "actionURL": "https://elonwu.site"
+# "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 更新正式服 ", 
