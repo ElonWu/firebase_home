@@ -1,17 +1,25 @@
-// import { render, cleanup, fireEvent } from '@testing-library/react';
+/**
+ * @jest-environment jsdom
+ */
+// 文件加入前缀才能使用 dom
 
-function isValidArray(arr) {
-  return Array.isArray(arr) && arr.length > 0;
-}
+// import React from 'react';
 
-describe('测试 isValidaArray', () => {
-  test('非数组', () => {
-    expect(isValidArray({ a: 1 })).toBe(false);
-  });
-  test('空数组', () => {
-    expect(isValidArray([])).toBe(false);
-  });
-  test('有效数组', () => {
-    expect(isValidArray([1, 2, 3])).toBe(true);
-  });
+// import { render, cleanup, screen, fireEvent } from '@testing-library/react';
+
+// import Button from '../index';
+
+// describe('测试 Display 组件', () => {
+//   afterEach(cleanup);
+
+//   it('检查展示', () => {
+//     const { container } = render(<Button>button</Button>);
+//     const btn = screen.getByLabelText('button');
+
+//     expect(btn).toHaveTextContent('button');
+//   });
+// });
+
+it('占位', () => {
+  expect(1 + 1).toBe(2);
 });
