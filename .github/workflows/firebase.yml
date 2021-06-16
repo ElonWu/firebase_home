@@ -5,10 +5,10 @@ on:
       - master
 
 jobs:
-  install: 
+  install:
     name: 安装
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v2
       - name: 搭建 Node 环境
         uses: actions/setup-node@v2
@@ -68,10 +68,10 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
-  deploy:
+  notice:
     name: 通知
     runs-on: ubuntu-latest
-    steps:       
+    steps:
       - name: 钉钉通知正式打包结果
         if: github.ref == 'refs/heads/master'
         uses: ghostoy/dingtalk-action@master
@@ -94,7 +94,5 @@ jobs:
               }]
             }
 
-
-
 # "actionURL": "https://elonwu.site"
-# "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 更新正式服 ", 
+# "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 更新正式服 ",
