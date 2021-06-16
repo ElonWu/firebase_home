@@ -14,13 +14,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - name: 缓存安装文件
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      # - name: cache-depandency
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
       - name: 安装依赖
         run: npm install
 
@@ -30,7 +30,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm run test
+      - run: npm run test:ci
+      - name: 测试失败推送
+        if: ${{ failure() }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          # dingtalk webhook
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          # secret used for signing
+          secret: ${{ secrets.DINGTALK_SECRET }}
+          # dingtalk message type
+          msgtype: 'actionCard'
+          # content for dingtalk message in JSON format
+          content: |
+            {
+              "title": "测试失败", 
+              "text": "测试失败"
+              "btnOrientation": "0", 
+              "btns": [{
+                "title": "查看项目", 
+                "actionURL": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }]
+            }
 
   build:
     name: 构建
@@ -77,7 +98,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 钉钉推送
+      - name: 发布成功的推送
         if: github.ref == 'refs/heads/master'
         uses: ghostoy/dingtalk-action@master
         with:

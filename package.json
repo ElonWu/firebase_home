@@ -1,7 +1,7 @@
 {
-  "name": "bbgame_moka",
+  "name": "elon_fire",
   "version": "1.0.0",
-  "description": "BBGAME Moka",
+  "description": "ELon Firebase Automatic",
   "main": "index.js",
   "scripts": {
     "dll": "webpack --config webpack.vendor.config.js",
@@ -10,6 +10,7 @@
     "build:test": "webpack --mode production --env buildType=test",
     "stat": "webpack --profile --json > stats.json",
     "test": "cross-env jest --coverage",
+    "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
