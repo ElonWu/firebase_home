@@ -10,7 +10,6 @@
     "build:test": "webpack --mode production --env buildType=test",
     "stat": "webpack --profile --json > stats.json",
     "test": "cross-env jest --coverage",
-    "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
