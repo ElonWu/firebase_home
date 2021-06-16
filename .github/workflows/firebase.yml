@@ -130,7 +130,7 @@ jobs:
               "btnOrientation": "0", 
               "btns": [{
                 "title": "查看正式服", 
-                "actionURL": "https://sidework.elonwu.site"
+                "actionURL": "https://elonwu.site"
               }]
             }
 
@@ -148,6 +148,6 @@ jobs:
               "btnOrientation": "0", 
               "btns": [{
                 "title": "查看测试服", 
-                "actionURL": "https://test-sidework.test.elonwu.site"
+                "actionURL": "https://test.elonwu.site"
               }]
             }
