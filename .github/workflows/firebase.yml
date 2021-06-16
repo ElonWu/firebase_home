@@ -5,8 +5,8 @@ on:
       - master
 
 jobs:
-  build:
-    name: 构建
+  init:
+    name: 初始化
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,16 +23,29 @@ jobs:
             ${{ runner.os }}-node-
       - name: 安装依赖
         run: npm install
-      # - name: 测试
-      #   run: npm run test
-      - name: 构建
-        run: npm run build
+
+  test:
+    name: 测试
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm run test
+
+  build:
+    name: 构建
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm run build
 
   # log:
   #   name: 构建文件记录
   #   needs: build
   #   runs-on: ubuntu-latest
   #   steps:
+  #     - uses: actions/checkout@v2
   #     - name: 上传打包文件
   #       uses: actions/upload-artifact@master
   #       with:
@@ -51,6 +64,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Firebase 部署
         uses: w9jds/firebase-action@master
         with:
