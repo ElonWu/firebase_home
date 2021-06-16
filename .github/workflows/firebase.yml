@@ -5,8 +5,8 @@ on:
       - master
 
 jobs:
-  install:
-    name: 打包
+  build:
+    name: 构建
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,18 +14,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      # - name: 缓存安装文件
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-
+      - name: 缓存安装文件
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: 安装依赖
         run: npm install
-      # - name: 执行测试
-      #   run: npm run test
-      - name: 执行构建
+      - name: 测试
+        run: npm run test
+      - name: 构建
         run: npm run build
 
   # log:
