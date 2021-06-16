@@ -15,9 +15,6 @@ jobs:
         with:
           node-version: '14'
 
-      # - name: 清空缓存
-      #   run: npm cache clean --force
-
       - name: cache
         uses: actions/cache@v2
         with:
@@ -40,13 +37,9 @@ jobs:
         if: ${{ failure() }}
         uses: ghostoy/dingtalk-action@master
         with:
-          # dingtalk webhook
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
-          # secret used for signing
           secret: ${{ secrets.DINGTALK_SECRET }}
-          # dingtalk message type
           msgtype: 'actionCard'
-          # content for dingtalk message in JSON format
           content: |
             {
               "title": "测试失败",
@@ -107,13 +100,9 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: ghostoy/dingtalk-action@master
         with:
-          # dingtalk webhook
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
-          # secret used for signing
           secret: ${{ secrets.DINGTALK_SECRET }}
-          # dingtalk message type
           msgtype: 'actionCard'
-          # content for dingtalk message in JSON format
           content: |
             {
               "title": "部署成功", 
