@@ -3,7 +3,7 @@
     "default": "elonwu-sidework"
   },
   "targets": {
-    "elonwu": {
+    "elonwu-sidework": {
       "hosting": {
         "master": [
           "elonwu-sidework"
