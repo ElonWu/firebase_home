@@ -5,11 +5,12 @@ on:
       - master
 
 jobs:
-  init:
-    name: 初始化
+  build:
+    name: 测试+构建
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: 搭建 Node 环境
         uses: actions/setup-node@v2
         with:
@@ -22,17 +23,14 @@ jobs:
           key: ${{ runner.os }}-elon-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-elon-
+
       - name: 安装依赖
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
 
-  test:
-    name: 测试
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm run test:ci
+      - name: 测试
+        run: npm run test:ci
+
       - name: 测试失败推送
         if: ${{ failure() }}
         uses: ghostoy/dingtalk-action@master
@@ -51,39 +49,27 @@ jobs:
               }]
             }
 
-  build:
-    name: 构建
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm run build
+      - name: 构建
+        run: npm run build
 
-  # log:
-  #   name: 构建文件记录
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: 上传打包文件
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         name: dist
-  #         path: dist
-  #     - name: 拉取仓库
-  #       uses: actions/checkout@master
-  #     - name: 下载打包文件
-  #       uses: actions/download-artifact@master
-  #       with:
-  #         name: dist
-  #         path: dist
+      - name: 上传打包文件
+        uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: dist
 
   deploy:
     name: 部署
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: 拉取仓库
+        uses: actions/checkout@master
+      - name: 下载打包文件
+        uses: actions/download-artifact@master
+        with:
+          name: dist
+          path: dist
       - name: Firebase 部署
         uses: w9jds/firebase-action@master
         with:
