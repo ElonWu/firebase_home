@@ -6,7 +6,7 @@ on:
 
 jobs:
   install:
-    name: 安装
+    name: 打包
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,20 +23,8 @@ jobs:
       #       ${{ runner.os }}-node-
       - name: 安装依赖
         run: npm install
-
-  # test:
-  #   name: 测试
-  #   needs: install
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 执行测试
-  #       run: npm run test
-
-  build:
-    name: 构建
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
+      # - name: 执行测试
+      #   run: npm run test
       - name: 执行构建
         run: npm run build
 
