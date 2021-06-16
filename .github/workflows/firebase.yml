@@ -15,8 +15,9 @@ jobs:
         with:
           node-version: '14'
 
-      - name: 清空缓存
-        run: npm cache clean --force
+      # - name: 清空缓存
+      #   run: npm cache clean --force
+
       # - name: cache-depandency
       #   uses: actions/cache@v2
       #   with:
@@ -24,41 +25,42 @@ jobs:
       #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       #     restore-keys: |
       #       ${{ runner.os }}-node-
+
       - name: 安装依赖
         run: npm install
 
-  test:
-    name: 测试
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm run test:ci
-      - name: 测试失败推送
-        if: ${{ failure() }}
-        uses: ghostoy/dingtalk-action@master
-        with:
-          # dingtalk webhook
-          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
-          # secret used for signing
-          secret: ${{ secrets.DINGTALK_SECRET }}
-          # dingtalk message type
-          msgtype: 'actionCard'
-          # content for dingtalk message in JSON format
-          content: |
-            {
-              "title": "测试失败", 
-              "text": "测试失败"
-              "btnOrientation": "0", 
-              "btns": [{
-                "title": "查看项目", 
-                "actionURL": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-              }]
-            }
+  # test:
+  #   name: 测试
+  #   needs: init
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - run: npm run test:ci
+  #     - name: 测试失败推送
+  #       if: ${{ failure() }}
+  #       uses: ghostoy/dingtalk-action@master
+  #       with:
+  #         # dingtalk webhook
+  #         webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+  #         # secret used for signing
+  #         secret: ${{ secrets.DINGTALK_SECRET }}
+  #         # dingtalk message type
+  #         msgtype: 'actionCard'
+  #         # content for dingtalk message in JSON format
+  #         content: |
+  #           {
+  #             "title": "测试失败",
+  #             "text": "测试失败",
+  #             "btnOrientation": "0",
+  #             "btns": [{
+  #               "title": "查看项目",
+  #               "actionURL": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+  #             }]
+  #           }
 
   build:
     name: 构建
-    needs: test
+    needs: init
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -115,7 +117,7 @@ jobs:
           content: |
             {
               "title": "部署成功", 
-              "text": "部署成功"
+              "text": "部署成功",
               "btnOrientation": "0", 
               "btns": [{
                 "title": "查看项目", 
