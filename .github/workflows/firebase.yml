@@ -19,9 +19,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-elon-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-elon-
       - name: 安装依赖
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
@@ -106,13 +106,10 @@ jobs:
           content: |
             {
               "title": "部署成功", 
-              "text": "部署成功",
+              "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 更新正式服 ",
               "btnOrientation": "0", 
               "btns": [{
                 "title": "查看项目", 
-                "actionURL": "https://google.cn"
+                "actionURL": "https://elonwu.site"
               }]
             }
-
-# "actionURL": "https://elonwu.site"
-# "text": "![img](https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60) \n\n仓库: [${{ github.repository }}](https://github.com/${{ github.repository }}) \n\n操作: ${{ github.actor }} 更新正式服 ",
