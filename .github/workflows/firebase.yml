@@ -19,14 +19,18 @@ jobs:
 
       - name: cache
         uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
         with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
-          key: ${{ runner.os }}-elon-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-elon-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: 安装依赖
-        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
 
       - name: 测试
