@@ -1,8 +1,6 @@
-function isValidArray(arr) {
-  return Array.isArray(arr) && arr.length > 0;
-}
+import { isValidArray } from '../type';
 
-describe('测试 isValidaArray', () => {
+describe('测试 isValidArray', () => {
   test('非数组', () => {
     expect(isValidArray({ a: 1 })).toBe(false);
   });
