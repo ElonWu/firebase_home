@@ -44,7 +44,7 @@ const Home = () => {
       // },
       {
         key: 'skills',
-        title: '掌握技能',
+        title: '技能',
         ref: skillsRef,
         entry: skillsEntry,
         inView: skillsInview,
